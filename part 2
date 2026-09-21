@@ -118,11 +118,11 @@ for ind=1:k
 end
 
 centroid_labels = zeros(k, 1);
-labels_in_cluster = trainsetlabels(members);
+
 
 for j = 1:k
     members = (train(:, 785) == j);
-
+    labels_in_cluster = trainsetlabels(members);
     if isempty(labels_in_cluster)
         error('Cluster %d is empty, check...')
     end
