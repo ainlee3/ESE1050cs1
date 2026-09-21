@@ -27,7 +27,7 @@ train=train(:,1:784);
 train(:,785)=zeros(1500,1);
 
 % testing set (200 images with 11 outliers)
-test=csvread('mnist_test_200_woutliers.csv');
+test=csvread('mnist_test_200.csv');
 % store the correct test labels
 correctlabels = test(:,785);
 test=test(:,1:784);
@@ -62,8 +62,8 @@ imagesc(testimage'); % this command plots an array as an image.  Type 'help imag
 
 %% This next section of code calls the three functions you are asked to specify
 
-k= ; % set k
-max_iter= ; % set the number of iterations of the algorithm
+k= 20; % set k
+max_iter= 100; % set the number of iterations of the algorithm
 
 %% The next line initializes the centroids.  Look at the initialize_centroids()
 % function, which is specified further down this file.
@@ -77,16 +77,25 @@ cost_iteration = zeros(max_iter, 1);
 %% This for-loop enacts the k-means algorithm
 
 for iter=1:max_iter
-    
-      % FILL THIS IN!
-    
+     mindistance=zeros(size(train,1),1);
+for i=1:size(train,1)
+     [index, mindistance(i)] = ...
+    assign_vector_to_centroid(train(i,1:784), centroids);
+% TODO: *************************************************************
+    train(i,785) = index;
+end
+cost_iteration(iter) = sum(mindistance.^2);
+   centroids= update_Centroids(train,k,centroids)
 end
 
 %% This section of code plots the k-means cost as a function of the number
 % of iterations
 
 figure;
-% FILL THIS IN!
+plot(1:max_iter,cost_iteration);
+xlabel('Iteration');
+ylabel('K-means cost');
+title('K-means Cost vs. Iteration');
 
 
 %% This next section of code will make a plot of all of the centroids
@@ -130,8 +139,14 @@ end
 % the vector and the assigned centroid.
 
 function [index, vec_distance] = assign_vector_to_centroid(data,centroids)
+% TODO: *************************************************************
+k = size(centroids, 1);
+distances=zeros(k,1);
+for j=1:k 
+    distances(j) = norm(data-centroids(j,1:784));   
+end
+[vec_distance, index]= min(distances);
 
-% FILL THIS IN
 
 end
 
@@ -141,8 +156,22 @@ end
 % It returns a new set of centroids based on the current assignment of the
 % training images.
 
-function new_centroids=update_Centroids(data,K)
+function new_centroids=update_Centroids(data,K,old_centroids)
 
-% FILL THIS IN
+% TODO: *************************************************************
+
+new_centroids=zeros(K,784);
+
+for i=1:K
+    cluster_elements = data(data(:,785)==i, 1:784);
+
+    if isempty(cluster_elements)
+        new_centroids(i,:) = old_centroids(i,1:784);
+    else
+        new_centroids(i,:) = mean(cluster_elements,1);
+    end
+% *******************************************************************
+
+end
 
 end
