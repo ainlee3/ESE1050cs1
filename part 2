@@ -124,10 +124,11 @@ for j = 1:k
     members = (train(:, 785) == j);
     labels_in_cluster = trainsetlabels(members);
     if isempty(labels_in_cluster)
-        error('Cluster %d is empty, check...')
+        error('Cluster %d is empty, check...', j)
     end
     centroid_labels(j) = mode(labels_in_cluster);
 end
+centroids(:, 785) = 0;
 save('classifierdata.mat', "centroids", "centroid_labels");
     
 
@@ -158,7 +159,7 @@ function [index, vec_distance] = assign_vector_to_centroid(data,centroids)
 k = size(centroids, 1);
 distances=zeros(k,1);
 for j=1:k 
-    distances(j) = norm(data-centroids(j,1:784));   
+    distances(j) = norm(data(1:784) - centroids(j,1:784));   
 end
 [vec_distance, index]= min(distances);
 
@@ -171,7 +172,7 @@ end
 % It returns a new set of centroids based on the current assignment of the
 % training images.
 
-function new_centroids=update_Centroids(data,K,old_centroids)
+function new_centroids=update_Centroids(data,K,old_centroids);
 
 % TODO: *************************************************************
 
