@@ -18,23 +18,26 @@ outliers = zeros(200,1);
 % loop through the test set, figure out the predicted number
 for i = 1:200
 
-testing_vector=test(i,:);
+    testing_vector=test(i,1:784);
 
-% Extract the centroid that is closest to the test image
-[prediction_index, vec_distance]=assign_vector_to_centroid(testing_vector,centroids);
+    % Extract the centroid that is closest to the test image
+    [prediction_index, vec_distance]=assign_vector_to_centroid(testing_vector,centroids);
 
-predictions(i) = centroid_labels(prediction_index);
+    predictions(i) = centroid_labels(prediction_index);
+    outliers (i) = vec_distance;
 
 end
 
 %% DESIGN AND IMPLEMENT A STRATEGY TO SET THE outliers VECTOR
 % outliers(i) should be set to 1 if the i^th entry is an outlier
 % otherwise, outliers(i) should be 0
-% FILL IN
+sorted_distances = sort(outliers, 'descend');
+threshold = sorted_distances(11);
+outliers = outliers >= threshold;
 
 %% MAKE A STEM PLOT OF THE OUTLIER FLAG
 figure;
-% FILL IN
+stem(outliers);
 
 %% The following plots the correct and incorrect predictions
 % Make sure you understand how this plot is constructed
@@ -45,11 +48,18 @@ plot(predictions,'x');
 title('Predictions');
 
 %% The following line provides the number of instances where and entry in correctlabel is
-% equatl to the corresponding entry in prediction
+% equal to the corresponding entry in prediction
 % However, remember that some of these are outliers
-sum(correctlabels==predictions)
+accuracy = 100 * sum(correctlabels==predictions) / length(correctlabels)
 
 function [index, vec_distance] = assign_vector_to_centroid(data,centroids)
-% FILL IN
+k = size(centroids, 1);
+distances = zeros(k,1);
+
+for j =1:k
+    distances(j) = norm(data - centroids(j,1:784));
 end
 
+[vec_distance,index] = min(distances);
+
+end
