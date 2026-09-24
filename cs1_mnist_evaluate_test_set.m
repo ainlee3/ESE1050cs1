@@ -38,6 +38,10 @@ outliers = outliers >= threshold;
 %% MAKE A STEM PLOT OF THE OUTLIER FLAG
 figure;
 stem(outliers);
+xlabel("Test Image Number");
+ylabel("Outlier Flag");
+title("Detected Outliers");
+
 
 %% The following plots the correct and incorrect predictions
 % Make sure you understand how this plot is constructed
@@ -45,7 +49,10 @@ figure;
 plot(correctlabels,'o');
 hold on;
 plot(predictions,'x');
-title('Predictions');
+title('Correct vs. Predicted Digits');
+xlabel('Test Image Number');
+ylabel('Digit');
+legend('Correct Label', 'Prediction');
 
 %% The following line provides the number of instances where and entry in correctlabel is
 % equal to the corresponding entry in prediction
