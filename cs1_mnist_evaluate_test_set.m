@@ -59,6 +59,22 @@ legend('Correct Label', 'Prediction');
 % However, remember that some of these are outliers
 accuracy = 100 * sum(correctlabels==predictions) / length(correctlabels)
 
+wrong = find(correctlabels ~= predictions);
+
+most_mistaken_digit = mode(correctlabels(wrong));
+predicted_for_that_digit = predictions( ...
+    wrong(correctlabels(wrong) == most_mistaken_digit));
+
+most_common_confusion = mode(predicted_for_that_digit);
+fprintf('Most mistaken digit: %d\n', most_mistaken_digit);
+fprintf('Most common predicted digit for it: %d\n', most_common_confusion);
+
+incorrect=correctlabels~=predictions;
+wrong_outliers = sum(incorrect & outliers);
+wrong_notoutliers = sum(incorrect & ~outliers);
+fprintf('Incorrect outlier predictions: %d\n', wrong_outliers);
+fprintf('Incorrect non-outlier predictions: %d\n', wrong_notoutliers);
+
 function [index, vec_distance] = assign_vector_to_centroid(data,centroids)
 k = size(centroids, 1);
 distances = zeros(k,1);
